@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React from 'react'
+import {useState, useEffect} from 'react'
+import axios from "axios"
+import "./App.css"
 function App() {
+
+  // probs need a useState to fetch Api responses
+  // Need a textarea/submission usestate and const
+  const [apiResponse, setApiResponse] = useState('')
+
+  const [userResponse, setUserResponse] = useState('')
+  useEffect(() => {
+    fetch("http://localhost:9000/")
+    .then((res) => setApiResponse(res))
+  }, [])  
+
+  const handleSubmit=(e)=>{
+    e.preventDefault()
+    axios.post("http://localhost:9000/getResponse", {
+        content: userResponse,
+    })
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <div> Chatbot App </div>
+      <form onSubmit = {handleSubmit} className = "Submit"> 
+        <input
+          type = "text"
+          required
+          value = {userResponse}
+          onChange = {(e)=>setUserResponse(e.target.value)}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+        </input>
+      </form>
+    </>
+  )
 }
 
-export default App;
+export default App
